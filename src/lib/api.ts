@@ -1,16 +1,8 @@
 import axios from 'axios';
 
-const STORAGE_KEY = 'API_BASE_URL';
-
-export const getApiBaseUrl = () =>
-  localStorage.getItem(STORAGE_KEY) || 'http://127.0.0.1:5000';
-
-export const setApiBaseUrl = (url: string) => {
-  localStorage.setItem(STORAGE_KEY, url);
-};
-
+const BASE_URL = import.meta.env.VITE_API_BASE_URL!;
 const api = axios.create({
-  baseURL: getApiBaseUrl(),
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -18,7 +10,7 @@ const api = axios.create({
 
 // Always use latest baseURL + attach token
 api.interceptors.request.use((config) => {
-  config.baseURL = getApiBaseUrl();
+  config.baseURL = BASE_URL;
   const token = localStorage.getItem('token');
   if (token) {
     (config.headers as any) = {
